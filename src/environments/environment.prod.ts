@@ -2,10 +2,10 @@
 // const backendUrl = 'http://localhost:8080/';
 // const loginUrl = 'http://localhost:4200/login';
 
-const frontendUrl = 'https://video.healing.tube/';
-const backendUrl = 'https://api.healing.tube/';
-const loginUrl = 'https://healing.tube/login';
-const logoutUrl = 'https://healing.tube/logout';
+const frontendUrl = 'https://video.hindu.social/';
+const backendUrl = 'https://api.hindu.social/';
+const loginUrl = 'https://hindu.social/login';
+const logoutUrl = 'https://hindu.social/logout';
 
 
 

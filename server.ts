@@ -82,9 +82,9 @@ export function app(): express.Express {
           description:
             'The Umbrella platform for All freedom based projects worldwide',
           image:
-            'https://video.healing.tube/assets/banner/hindu-social-Logo.jpg',
-          site: 'https://video.healing.tube/',
-          url: 'https://video.healing.tube' + params,
+            'https://video.hindu.social/assets/banner/hindu-social-Logo.jpg',
+          site: 'https://video.hindu.social/',
+          url: 'https://video.hindu.social' + params,
           keywords: 'Hindu Social',
         };
         if (
