@@ -82,7 +82,7 @@ export function app(): express.Express {
           description:
             'The Umbrella platform for All freedom based projects worldwide',
           image:
-            'https://video.hindu.social/assets/banner/hindu-social-Logo.jpg',
+            'https://video.hindu.social/assets/banner/HinduSocial-Logo-meta.jpg',
           site: 'https://video.hindu.social/',
           url: 'https://video.hindu.social' + params,
           keywords: 'Hindu Social',
