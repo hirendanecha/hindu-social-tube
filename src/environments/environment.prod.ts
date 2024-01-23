@@ -2,7 +2,7 @@
 // const backendUrl = 'http://localhost:8080/';
 // const loginUrl = 'http://localhost:4200/login';
 
-const frontendUrl = 'https://video.hindu.social/';
+const frontendUrl = 'https://tube.hindu.social/';
 const backendUrl = 'https://api.hindu.social/';
 const loginUrl = 'https://hindu.social/login';
 const logoutUrl = 'https://hindu.social/logout';
