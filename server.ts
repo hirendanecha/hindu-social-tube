@@ -17,7 +17,7 @@ const api_url = environment.apiUrl;
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
-  const distFolder = join(process.cwd(), 'dist-video/video-hindu-social/browser');
+  const distFolder = join(process.cwd(), 'tube-dist/video-hindu-social/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html'))
     ? 'index.original.html'
     : 'index';
@@ -26,7 +26,7 @@ export function app(): express.Express {
   const path = require('path');
   const template = fs
     .readFileSync(
-      path.join(join(process.cwd(), 'dist-video/video-hindu-social/browser'), 'index.html')
+      path.join(join(process.cwd(), 'tube-dist/video-hindu-social/browser'), 'index.html')
     )
     .toString();
   // Shim for the global window and document objects.
@@ -78,14 +78,14 @@ export function app(): express.Express {
         }
         const params = req.params[0];
         var seo: any = {
-          title: 'Healing Tube',
+          title: 'Hindu Social',
           description:
-            'The Umbrella platform for All freedom based projects worldwide',
+            'Virtually Divine, Truly Yours: Join the Pious Pulse of our Hindu Haven.',
           image:
-            'https://video.healing.tube/assets/banner/hindu-social-Logo.jpg',
-          site: 'https://video.healing.tube/',
-          url: 'https://video.healing.tube' + params,
-          keywords: 'Healing Tube',
+            'https://tube.hindu.social/assets/banner/hindu-social-Logo.jpg',
+          site: 'https://tube.hindu.social/',
+          url: 'https://tube.hindu.social' + params,
+          keywords: 'Hindu Social',
         };
         if (
           params.indexOf('channel/') > -1
@@ -126,7 +126,7 @@ export function app(): express.Express {
           const pdhtml = document.createElement('div');
           pdhtml.innerHTML = post?.postdescription || post?.metadescription;
           const talent = {
-            name: post?.title || post?.albumname || 'Healing.Tube Post',
+            name: post?.title || post?.albumname || 'Hindu Social Post',
             description: pdhtml?.textContent || 'Post content',
             image: post?.thumbfilename || post?.metaimage || post?.imageUrl,
           };

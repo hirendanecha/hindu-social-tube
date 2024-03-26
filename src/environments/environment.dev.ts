@@ -2,11 +2,11 @@
 // const backendUrl = 'http://localhost:8080/';
 // const loginUrl = 'http://localhost:4200/login';
 
-const frontendUrl ='https://video.healing.tube/';
-const backendUrl =  'https://api.healing.tube/';
-const loginUrl = 'https://www.healing.tube/login';
+const frontendUrl ='https://tube.hindu.social/';
+const backendUrl =  'https://api.hindu.social/';
+const loginUrl = 'https://www.hindu.social/login';
 const wasabiUrl = 'https://freedom-social.s3.us-east-1.wasabisys.com/';
-const logoutUrl = 'https://www.healing.tube/logout';;
+const logoutUrl = 'https://www.hindu.social/logout';;
 
 
 
