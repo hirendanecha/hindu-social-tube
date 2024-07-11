@@ -82,7 +82,7 @@ export function app(): express.Express {
           description:
             'Virtually Divine, Truly Yours: Join the Pious Pulse of our Hindu Haven.',
           image:
-            'https://tube.hindu.social/assets/banner/hindu-social-Logo.jpg',
+            'https://www.hindu.social/assets/images/profile-cover.png',
           site: 'https://tube.hindu.social/',
           url: 'https://tube.hindu.social' + params,
           keywords: 'Hindu Social',

@@ -35,6 +35,8 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
   @Input() message: string;
   @Input() data: any;
   @Input() communityId: any;
+  @Input() channelList: any = [];
+
   postData: any = {
     id: null,
     profileid: null,
@@ -335,6 +337,7 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
   onSelectedVideo(event: any) {
     // const maxSize = 2*10^9;
     const maxSize = 2147483648; //2GB
+    // const maxSize = 10737418240; //10GB
     if (event.target?.files?.[0].size < maxSize) {
         this.fileSizeError = false
       if (event.target?.files?.[0].type.includes('video/mp4')) {
@@ -375,5 +378,9 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
 
   onChangeTag(event) {
     this.postData.keywords = event.target.value.replaceAll(' ', ',');
+  }
+  selectChannel(channelId): void {
+    this.channelId = channelId;
+    console.log(this.channelId);
   }
 }
