@@ -15,7 +15,7 @@ export const environment = {
   backendUrl: backendUrl,
   loginUrl: loginUrl,
   apiUrl: `${backendUrl}api/v1/`,
-  domain: '.healing.tube',
+  domain: '.hindu.social',
   socketUrl: `${backendUrl}`,
   conferenceUrl: 'https://facetime.tube/',
   logoutUrl: logoutUrl
