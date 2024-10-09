@@ -24,7 +24,6 @@ import { SocketService } from 'src/app/@shared/services/socket.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { getTagUsersFromAnchorTags } from 'src/app/@shared/utils/utils';
 import { environment } from 'src/environments/environment';
-declare var Clappr: any;
 declare var jwplayer: any;
 @Component({
   selector: 'app-video',
@@ -88,7 +87,9 @@ export class VideoComponent implements OnInit, OnChanges {
     private seoService: SeoService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.profileId = JSON.parse(this.authService.getUserData() as any)?.profileId || null;
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.profileId = data?.profileId || null;
+    });
     if (isPlatformBrowser(this.platformId)) {
 
       this.route.params.subscribe((params) => {
@@ -148,7 +149,7 @@ export class VideoComponent implements OnInit, OnChanges {
         this.videoDetails = res[0];
 
         const data = {
-          title: `HinduSocial ${this.videoDetails.albumname}`,
+          title: `Hindu.social ${this.videoDetails.albumname}`,
           description: this.videoDetails.postdescription,
         };
         this.seoService.updateSeoMetaData(data);
@@ -551,7 +552,7 @@ export class VideoComponent implements OnInit, OnChanges {
   // }
 
   editComment(comment): void {
-    if (comment.parentCommentId) {
+    if (comment) {
       const modalRef = this.modalService.open(ReplyCommentModalComponent, {
         centered: true,
       });
@@ -630,7 +631,6 @@ export class VideoComponent implements OnInit, OnChanges {
         if (res) {
           this.userSearchList = res.channels;
           this.userSearchNgbDropdown.open();
-          console.log(res);
         } else {
           this.userSearchList = [];
           this.userSearchNgbDropdown.close();
@@ -737,7 +737,6 @@ export class VideoComponent implements OnInit, OnChanges {
     modalRef.componentInstance.post = post;
     modalRef.result.then((res) => {
       if (res.profileid) {
-        console.log(res);
         this.socketService?.createOrEditPost(res);
         this.toastService.success('Post share successfully');
       } else {

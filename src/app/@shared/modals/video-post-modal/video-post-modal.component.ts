@@ -4,15 +4,12 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnChanges,
   OnInit,
-  SimpleChanges,
 } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../services/toast.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { forkJoin } from 'rxjs';
-import { SocketService } from '../../services/socket.service';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonService } from '../../services/common.service';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../../services/auth.service';
@@ -36,7 +33,6 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
   @Input() data: any;
   @Input() communityId: any;
   @Input() channelList: any = [];
-
   postData: any = {
     id: null,
     profileid: null,
@@ -65,8 +61,8 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
 
   streamnameProgress = 0;
   thumbfilenameProgress = 0;
-
   fileSizeError = false;
+  cancelUpload$ = new Subject<void>();
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -78,15 +74,10 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
     public modalService: NgbModal,
     private cdr: ChangeDetectorRef
   ) {
-    this.postData.profileid = JSON.parse(
-      this.authService.getUserData() as any
-    )?.profileId;
-    // console.log('profileId', this.postData.profileid);
-    // console.log('editData', this.data);
-
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.postData.profileid = data?.profileId;
+    });
     this.channelId = +localStorage.getItem('channelId');
-
-    // console.log(this.channelId);
   }
 
   ngAfterViewInit(): void {
@@ -187,7 +178,7 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
       if (this.postData?.file1?.name || this.postData?.file2?.name) {
         if (this.postData?.file1?.name) {
           this.isProgress = true;
-          this.commonService.upload(this.postData?.file1).subscribe((event) => {
+          this.commonService.upload(this.postData?.file1).pipe(takeUntil(this.cancelUpload$)).subscribe((event) => {
             if (event.type === HttpEventType.UploadProgress) {
               this.streamnameProgress = Math.round(
                 (100 * event.loaded) / event.total
@@ -199,9 +190,16 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
               if (event.body?.url) {
                 this.postData['file1'] = null;
                 this.postData['streamname'] = event.body.url;
-                if (!this.postData.id && this.thumbfilenameProgress === 100 && this.streamnameProgress === 100) {
+                if (
+                  !this.postData.id &&
+                  this.thumbfilenameProgress === 100 &&
+                  this.streamnameProgress === 100
+                ) {
                   this.createPost();
-                } else if (this.postData.id && this.streamnameProgress === 100) {
+                } else if (
+                  this.postData.id &&
+                  this.streamnameProgress === 100
+                ) {
                   this.createPost();
                 }
               }
@@ -212,7 +210,7 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
           if (this.postData.id) {
             this.spinner.show();
           }
-          this.commonService.upload(this.postData?.file2).subscribe((event) => {
+          this.commonService.upload(this.postData?.file2).pipe(takeUntil(this.cancelUpload$)).subscribe((event) => {
             if (event.type === HttpEventType.UploadProgress) {
               this.thumbfilenameProgress = Math.round(
                 (100 * event.loaded) / event.total
@@ -225,9 +223,13 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
                 this.postData['file2'] = null;
                 this.postData['thumbfilename'] = event.body.url;
               }
-              if (this.postData?.id && this.thumbfilenameProgress === 100 && !this.streamnameProgress) {
+              if (
+                this.postData?.id &&
+                this.thumbfilenameProgress === 100 &&
+                !this.streamnameProgress
+              ) {
                 this.spinner.hide();
-                this.postData.streamname = this.selectedVideoFile
+                this.postData.streamname = this.selectedVideoFile;
                 this.createPost();
               }
             }
@@ -275,17 +277,17 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
       this.postData.albumname
     ) {
       this.postData['channelId'] = this.channelId || null;
-      console.log('post-data', this.postData);
+      // console.log('post-data', this.postData);
       this.commonService.post(this.apiUrl, this.postData).subscribe({
         next: (res: any) => {
           this.spinner.hide();
           // this.postData = null;
           if (this.postData.id) {
             this.toastService.success('Post updated successfully');
-            this.activeModal.close();
+            this.activeModal.close('success');
           } else {
             this.toastService.success('Post created successfully');
-            this.activeModal.close();
+            this.activeModal.close('success');
           }
         },
         error: (error) => {
@@ -336,21 +338,21 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
 
   onSelectedVideo(event: any) {
     // const maxSize = 2*10^9;
-    const maxSize = 2147483648; //2GB
-    // const maxSize = 10737418240; //10GB
+    // const maxSize = 2147483648; //2GB
+    const maxSize = 10737418240; //10GB
     if (event.target?.files?.[0].size < maxSize) {
-        this.fileSizeError = false
+      this.fileSizeError = false;
       if (event.target?.files?.[0].type.includes('video/mp4')) {
         this.postData.file1 = event.target?.files?.[0];
         this.selectedVideoFile = URL.createObjectURL(event.target.files[0]);
         const videoSize = this.postData.file1.size;
-        console.log(videoSize);
+        // console.log(videoSize);
       } else {
         this.toastService.warring('please upload only mp4 files');
       }
-    }else{
-      this.toastService.warring('Maximum video size allowed is 2 GB.');
-      this.fileSizeError = true
+    } else {
+      this.toastService.warring('Maximum video size allowed is 10 GB.');
+      this.fileSizeError = true;
     }
   }
 
@@ -373,7 +375,8 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
 
   goToHome(): void {
     this.activeModal.close();
-    location.reload();
+    this.cancelUpload$.next();
+    this.cancelUpload$.complete();
   }
 
   onChangeTag(event) {
@@ -381,6 +384,5 @@ export class VideoPostModalComponent implements OnInit, AfterViewInit {
   }
   selectChannel(channelId): void {
     this.channelId = channelId;
-    console.log(this.channelId);
   }
 }

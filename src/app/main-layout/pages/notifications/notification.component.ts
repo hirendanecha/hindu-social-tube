@@ -3,6 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { CommonService } from 'src/app/@shared/services/common.service';
+import { AuthService } from 'src/app/@shared/services/auth.service';
 import { ShareService } from 'src/app/@shared/services/share.service';
 
 @Component({
@@ -20,8 +21,8 @@ export class NotificationsComponent {
     private spinner: NgxSpinnerService,
     private router: Router,
     private toastService: ToastService,
-    private shareService: ShareService
-  ) { }
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.getNotificationList();
@@ -29,26 +30,24 @@ export class NotificationsComponent {
 
   getNotificationList() {
     this.spinner.show();
-    const id = this.shareService.userDetails.Id;
+    const id = this.authService.getUserData().profileId;
     const data = {
       page: this.activePage,
       size: 30,
     };
-    this.commonService.getNotificationList(Number(id),data).subscribe(
-      {
-        next: (res: any) => {
-          this.spinner.hide();
-          if (this.activePage < res.pagination.totalPages) {
-            this.hasMoreData = true;
-          }
-          this.notificationList = [...this.notificationList, ...res?.data];
-        },
-        error:
-          (error) => {
-            this.spinner.hide();
-            console.log(error);
-          }
-      });
+    this.commonService.getNotificationList(parseInt(id), data).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+        if (this.activePage < res.pagination.totalPages) {
+          this.hasMoreData = true;
+        }
+        this.notificationList = [...this.notificationList, ...res?.data];
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
   }
 
   viewUserPost(id) {
@@ -58,7 +57,9 @@ export class NotificationsComponent {
   removeNotification(id: number): void {
     this.commonService.deleteNotification(id).subscribe({
       next: (res: any) => {
-        this.toastService.success(res.message || 'Notification delete successfully');
+        this.toastService.success(
+          res.message || 'Notification delete successfully'
+        );
         this.getNotificationList();
       },
     });

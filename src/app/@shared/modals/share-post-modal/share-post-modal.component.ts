@@ -28,15 +28,19 @@ export class SharePostModalComponent implements AfterViewInit {
     tags: [],
     parentPostId: null
   };
+  profileId: number;
 
   constructor(
     public activeModal: NgbActiveModal,
     public authService: AuthService
-  ) {}
+  ) {
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.profileId = data?.profileId;
+    });
+  }
 
   ngAfterViewInit(): void {
-    const profileId  = JSON.parse(this.authService.getUserData() as any)?.profileId;
-    this.sharePostData.profileid = profileId;
+    this.sharePostData.profileid = this.profileId;
     this.sharePostData.parentPostId = this.post.id;
     this.sharePost = this.tubeUrl + 'video/' + this.post.id; 
   }

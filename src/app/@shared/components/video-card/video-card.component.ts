@@ -3,8 +3,6 @@ import {
   OnInit,
   Input,
   AfterViewInit,
-  Output,
-  EventEmitter,
   NgZone,
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
@@ -28,7 +26,7 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
   advertisementDataList: any = [];
   isInnerWidthSmall: boolean;
   currentPlayingVideo: any = null;
-
+  
   @Input('videoData') videoData: any = [];
   constructor(
     private router: Router,
@@ -37,10 +35,13 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
     public commonService: CommonService,
     private ngZone: NgZone,
   ) {
-    this.profileid = JSON.parse(this.authService.getUserData() as any)?.profileId;
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.profileid = data?.profileId;
+    });
+    this.includedChannels = localStorage.getItem('get-channels');
     // console.log(this.profileid);
   }
-
+  
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -65,9 +66,9 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
   isIncluded(channelId: number): boolean {
     return this.includedChannels?.includes(channelId);
   }
-
+  
   ngAfterViewInit(): void {}
-
+  
   playvideo(video: any): void {
     if (this.currentPlayingVideo) {
       const currentPlayer = jwplayer('jwVideo-' + this.currentPlayingVideo.id);
@@ -91,9 +92,10 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
     });
 
     player.load();
+    this.currentPlayingVideo = video;
     this.playVideoByID(video.id);
-  }
-
+    }
+  
   openDetailPage(video: any): void {
     // this.router.navigate([`video/${video.id}`], {
     //   state: { data: video },
@@ -105,7 +107,6 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
   playVideoByID(id: number) {
     this.postId = this.isPlay ? null : id;
     this.isPlay = !this.isPlay;
-    console.log('isPlay', this.isPlay);
     // console.log('postId', this.postId);
   }
 
@@ -132,8 +133,8 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.result.then((res) => {
       // console.log(res);
-      window.location.reload();
       if (res === 'success') {
+        window.location.reload();
       }
     });
   }
@@ -146,5 +147,5 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
         console.log(err);
       },
     });
-  } 
+  }
 }

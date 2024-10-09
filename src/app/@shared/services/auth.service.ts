@@ -9,28 +9,29 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   // admin: BehaviorSubject<any>;
   userDetails: any = {};
   user: BehaviorSubject<any>;
   token: BehaviorSubject<any>;
+  loginUserInfo = new BehaviorSubject<any>(null);
+  loggedInUser$ = this.loginUserInfo.asObservable();
 
   constructor(
     private commonService: CommonService,
     private toastService: ToastService,
     private cookieService: CookieService,
-    private http:HttpClient 
-
+    private http: HttpClient
   ) {
-
     // const adminJson = localStorage.getItem('adminAuth') ? JSON.parse(localStorage.getItem('adminAuth') || '') : {};
     // this.admin = new BehaviorSubject<any>(adminJson);
-    const userJson = localStorage.getItem('authUser') ? JSON.parse(localStorage.getItem('authUser') as any) : {};
-    this.user = new BehaviorSubject<any>(userJson);
-    // this.token = new BehaviorSubject<any>(this.cookieService.get('auth-token') ? this.cookieService.get('auth-token') : '');
+    // const userJson = localStorage.getItem('authUser')
+    //   ? JSON.parse(localStorage.getItem('authUser') as any)
+    //   : {};
+    // this.user = new BehaviorSubject<any>(userJson);
+    // this.token = new BehaviorSubject<any>(this.cookieService.get('token') ? this.cookieService.get('token') : '');
   }
 
   adminData(): any {
@@ -45,7 +46,7 @@ export class AuthService {
   // adminLogin(adminJson: any = {}): Observable<any> {
   //     localStorage.clear();
   //     localStorage.setItem('adminAuth', JSON.stringify(adminJson));
-  //     localStorage.setItem('auth-token', adminJson?.token);
+  //     localStorage.setItem('token', adminJson?.token);
 
   //     if (!!adminJson) {
   //         this.admin.next(adminJson);
@@ -90,14 +91,16 @@ export class AuthService {
 
   userLogout(): void {
     const reqBody = {
-      _id: this.userId()
+      _id: this.userId(),
     };
 
-    this.commonService.post(urlConstant.Auth.Logout, reqBody).subscribe((res) => {
-      this.toastService.success(`Logout successfully.`);
-      this.clearData();
-      window.location.href = '';
-    });
+    this.commonService
+      .post(urlConstant.Auth.Logout, reqBody)
+      .subscribe((res) => {
+        this.toastService.success(`Logout successfully.`);
+        this.clearData();
+        window.location.href = '';
+      });
   }
 
   clearData(): void {
@@ -112,8 +115,10 @@ export class AuthService {
   }
 
   getToken(): string {
-    return '';
-    // return this.token?.getValue() || '';
+    // return '';
+    const token = localStorage.getItem('auth-token');
+    // console.log(token);
+    return token;
   }
 
   setUserSignEmail(email: string = ''): void {
@@ -138,12 +143,17 @@ export class AuthService {
   // }
 
   setUserData(userDetails: any) {
-    // localStorage.setItem('authUser', JSON.stringify(userDetails));
+    localStorage.setItem('authUser', JSON.stringify(userDetails));
   }
 
   getUserData() {
-    return localStorage.getItem('authUser')
+    return JSON.parse(localStorage.getItem('authUser'));
   }
+
+  getLoginUserDetails(userData: any = {}) {
+    this.loginUserInfo.next(userData);
+  }
+
   verifyToken(token): Observable<any> {
     return this.http.get(
       `${environment.apiUrl}customers/verify-token/${token}`

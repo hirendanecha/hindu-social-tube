@@ -18,7 +18,9 @@ export class ChannelsComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private router: Router
   ) {
-    this.userData = JSON.parse(this.authService.getUserData() as any);
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.userData = data;
+    });
   }
 
   ngOnInit(): void {

@@ -57,6 +57,7 @@
         <div
           [id]="'jwVideo-' + videoDetails?.id"
           class="w-100 c-height"
+          [ngStyle]="{'background-image': videoDetails?.thumbfilename ? 'url(' + videoDetails.thumbfilename + ')' : ''}"
           loading="lazy"
         ></div>
       </div>
@@ -80,7 +81,7 @@
                   </p> -->
                 </div>
                 <div class="d-flex gap-1 gap-sm-3" *ngIf="sharedService.getCredentials()">
-                  <!-- <div
+                  <div
                     class="d-flex align-items-center gap-1 cursor"
                     (click)="
                       videoDetails.react === 'L'
@@ -95,20 +96,22 @@
                     <span class="me-1 font-20-px">{{
                       videoDetails.likescount || 0
                     }}</span>
-                  </div> -->
-                <div
-                  class="d-flex align-items-center cursor"
-                  (click)="shareOnNF(videoDetails)"
-                >
-                  <span class="me-1 font-20-px">Share</span>
-                  <fa-icon [icon]="['fas', 'share-alt']" [fixedWidth]="true" />
+                  </div>
+                  <div
+                    class="d-flex align-items-center cursor"
+                    (click)="shareOnNF(videoDetails)"
+                  >
+                    <span class="me-1 font-20-px">Share</span>
+                    <fa-icon [icon]="['fas', 'share-alt']" [fixedWidth]="true" />
+                  </div>
                 </div>
               </div>
             </div>
             <div
-            class="single-video-author box mb-3 cursor flex-column flex-sm-row justify-content-between align-items-center"
+              class="single-video-author box mb-3 cursor d-flex flex-column flex-sm-row justify-content-between align-items-center"
               *ngIf="videoDetails?.unique_link"
             >
+            <div>
               <img
                 class="img-fluid"
                 loading="lazy"
@@ -117,7 +120,7 @@
                 alt=""
               />
               <p class="d-flex align-items-center">
-                <a  [href]="'channel/' + videoDetails?.unique_link"
+                <a [href]="'channel/' + videoDetails?.unique_link"
                   ><strong class="header-text me-2">{{
                     videoDetails.firstname
                   }}</strong></a
@@ -136,13 +139,13 @@
                 {{ videoDetails?.created | date : "MMM dd,yyyy" }}</small
               >
             </div>
-            <!-- <ng-container *ngIf="videoDetails?.profileid !== profileId && sharedService.getCredentials()">
-              <div class="d-flex align-items-center form-inline my-2 my-lg-0">
-                <button class="btn btn-sm" [ngClass]="!videoDetails?.isSubscribed ? 'btn-success' : 'btn-danger'" (click)="channelSubscribe(videoDetails?.isSubscribed)">
-                  {{ !videoDetails?.isSubscribed ? 'Subscribe' : 'Unsubscribe'}}
-                </button>
-              </div>
-            </ng-container> -->
+              <ng-container *ngIf="videoDetails?.profileid !== profileId && sharedService.getCredentials()">
+                <div class="d-flex align-items-center form-inline my-2 my-lg-0">
+                  <button class="btn btn-sm" [ngClass]="!videoDetails?.isSubscribed ? 'btn-success' : 'btn-danger'" (click)="channelSubscribe(videoDetails?.isSubscribed)">
+                    {{ !videoDetails?.isSubscribed ? 'Subscribe' : 'Unsubscribe'}}
+                  </button>
+                </div>
+              </ng-container>
             </div>
             <div class="single-video-info-content box mb-3">
               <!-- <h6>Cast:</h6>
@@ -182,7 +185,7 @@
                           class="me-3"
                           loading="lazy"
                           data-src="{{
-                            authService?.userDetails?.ProfilePicName
+                            authService.getUserData().ProfilePicName
                           }}"
                           onerror="this.onerror=null;this.src='/assets/dummy/11.jpg';"
                           alt="icon"
@@ -322,7 +325,7 @@
                             class="reviews-members-footer d-flex align-items-center"
                           >
                             <button
-                              class="total-like me-2 cursor  btn btn-outline-primary"
+                              class="total-like me-2 cursor btn btn-outline-primary"
                               (click)="
                                 comment.react == 'L'
                                   ? disLikeComments(comment)
@@ -339,7 +342,7 @@
                               }}&nbsp;Likes
                             </button>
                             <button
-                              class="total-like cursor  btn btn-outline-primary"
+                              class="total-like cursor btn btn-outline-primary"
                               [disabled]="!sharedService.getCredentials()"
                               (click)="showReplySection(comment?.id)"
                             >
@@ -406,7 +409,7 @@
                             <ng-container
                               *ngFor="let reply of comment?.replyCommnetsList"
                             >
-                              <div class="ms-5">
+                              <div class="ms-sm-5">
                                 <div class="d-flex mx-sm-5 mt-2 mt-sm-4 top-area">
                                   <a
                                     ><img
@@ -483,7 +486,7 @@
                                     <div class="reviews-members-footer">
                                       <!-- <a class="total-like" -->
                                       <button
-                                        class="total-like text-primary cursor  btn btn-outline-primary"
+                                        class="total-like text-primary cursor btn btn-outline-primary"
                                         [disabled]="
                                           !sharedService.getCredentials()
                                         "
@@ -567,7 +570,7 @@
         </div>
         <ng-template #noCredentials>
           <div
-          class="right-sidebar profile-sidebar cus-scrollbar d-flex flex-column d-none d-lg-flex shadow"
+            class="right-sidebar profile-sidebar cus-scrollbar d-flex flex-column d-none d-lg-flex shadow"
           >
             <div class="dashboard-img mb-5 mt-2">
               <img

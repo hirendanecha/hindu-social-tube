@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap");
 
 :root {
+  --body-font: "Barlow", sans-serif;
   --body-bg: #fafafa;
   --bg-white: #fff;
   --bg-sidebar: #ffffff;
@@ -36,7 +37,7 @@
   --link-color: #fff;
   // --link-color: #ff0000;
   --link-color-1: #e41e1d;
-  --link-bg: #333333;
+  --link-bg: #000428;
   --scroll-color: #e41e1d;
   --blue-text: #1d1f55;
   --card-bg: #212f48;
@@ -51,7 +52,7 @@ html {
 body {
   background-color: var(--body-bg);
   color: #888;
-  font-size: 13px;
+  font-size: 15px;
   height: 100%;
   font-family: "Open Sans", sans-serif;
 }
@@ -1279,8 +1280,7 @@ h6 {
 }
 
 .time {
-  background: #061726 none repeat scroll 0 0;
-  border-radius: 10px;
+  border-radius: 2px;
   bottom: 5px;
   // color: var(--text-color);
   font-size: 11px;
@@ -1289,7 +1289,8 @@ h6 {
   padding: 0 6px;
   position: absolute;
   right: 5px;
-  // border: 2px solid #fff;
+  background: #061726 none repeat scroll 0 0;
+  border-radius: 10px;
 }
 
 .video-card:hover .time {
@@ -1371,6 +1372,12 @@ h6 {
     margin: 0 12px 0 0;
     width: 158px;
     // width: 122px;
+
+    @media (min-width: 768px) and (max-width: 1251px) {
+      float: unset;
+      margin-bottom: 6px;
+      width: 100%;
+    }
   }
 
   .video-card-body {
@@ -1445,9 +1452,9 @@ h6 {
 .reviews-members-header {
   margin-bottom: 13px;
 }
-.reviews-members-body p {
-  color: #7b7b7b;
-  font-size: 16px;
+.reviews-members-body {
+  font-size: 17px;
+  color: var(--text-color);
 }
 .reviews-members-footer {
   display: inline-block;
@@ -1469,7 +1476,7 @@ h6 {
   border: 1px solid var(--link-color);
   border-radius: 3px;
   // color: #ff516b !important;
-  font-size: 11px;
+  font-size: 13px;
   padding: 4px 10px;
   vertical-align: sub;
 }
@@ -1479,7 +1486,7 @@ h6 {
   // border: 1px solid #ff516b;
   border-radius: 3px;
   color: var(--bg-sidebar) !important;
-  font-size: 11px;
+  font-size: 13px;
   padding: 4px 10px;
   vertical-align: sub;
 
@@ -2281,6 +2288,10 @@ h6 {
   cursor: pointer;
 }
 
+.jw-state-idle .jw-controls {
+  background: unset !important;
+}
+
 ::-webkit-scrollbar {
   width: 8px !important;
   background-color: #f5f5f5 !important;
@@ -2313,7 +2324,7 @@ fa-icon svg path {
   div,
   strong,
   li {
-    font-family: "Open Sans", sans-serif !important;
+    font-family:var(--body-font) !important;
     font-size: 15px !important;
     line-height: 22px !important;
     margin: unset !important;

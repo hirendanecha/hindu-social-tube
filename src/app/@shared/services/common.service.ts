@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpHeaders,
+  HttpRequest,
+} from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
 import { throwError, of, Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -15,8 +20,8 @@ export class CommonService {
   public config = {};
   public userData: any = {};
   public loading: any;
-  private apiUrl = environment.apiUrl
-  constructor(public http: HttpClient, public router: Router) { }
+  private apiUrl = environment.apiUrl;
+  constructor(public http: HttpClient, public router: Router) {}
 
   getHtml(api: string, reqBody: any = {}): Observable<any> {
     let contentHeaders = new HttpHeaders();
@@ -30,22 +35,21 @@ export class CommonService {
     });
   }
 
-  upload(
-    files: File,
-  ): Observable<HttpEvent<any>> {
+  upload(files: File): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
     formData.append('file', files);
-    console.log(formData);
-    const req =
-      new HttpRequest(
-        'POST',
-        `${this.apiUrl}posts/upload`,
-        formData,
-        {
-          reportProgress: true,
-          responseType: 'json',
-        }
-      );
+    // console.log(formData);
+    const headers = new HttpHeaders({ timeout: `${1500000}` });
+    const req = new HttpRequest(
+      'POST',
+      `${this.apiUrl}utils/image-upload`,
+      formData,
+      {
+        headers: headers,
+        reportProgress: true,
+        responseType: 'json',
+      }
+    );
     return this.http.request(req);
   }
 
@@ -133,14 +137,17 @@ export class CommonService {
 
   getImageUrl(url: string): Observable<Blob> {
     return this.http.get(url, {
-      responseType: "blob",
+      responseType: 'blob',
     });
   }
 
-  deleteComments() { }
+  deleteComments() {}
 
   getNotificationList(id: number, data = {}): Observable<any> {
-    return this.http.post(`${this.apiUrl}customers/get-notification/${id}`, data);
+    return this.http.post(
+      `${this.apiUrl}customers/get-notification/${id}`,
+      data
+    );
   }
 
   deleteNotification(id: number): Observable<any> {
@@ -161,7 +168,7 @@ export class CommonService {
 
   getNotification(id): Observable<any> {
     return this.http.get(
-      `${this.apiUrl}customers/notification/${id}`
+      `${this.apiUrl}customers/notification/${id}&q=${Date.now()}`
     );
   }
   subscribeChannel(data): Observable<any> {

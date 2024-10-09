@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { ShareService } from 'src/app/@shared/services/share.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { CommonService } from 'src/app/@shared/services/common.service';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -25,7 +24,6 @@ export class HeaderComponent implements OnInit {
     public shareService: ShareService,
     private breakpointService: BreakpointService,
     private offcanvasService: NgbOffcanvas,
-    private commonService: CommonService,
     private cookieService: CookieService,
     public authService: AuthService,
     private router: Router,
@@ -38,16 +36,22 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userDetails = JSON.parse(this.authService.getUserData() as any);
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.userDetails = data;
+    });
   }
 
   ngAfterViewInit(): void {}
 
   myAccountNavigation(): void {
-    const id = this.shareService.userDetails.profileId;
-    // location.href = `https://freedom.buzz/settings/view-profile/${id}`;
+    const id = this.userDetails.profileId;
+    // location.href = `https://hindu.social/settings/view-profile/${id}`;
     const url = `https://hindu.social/settings/view-profile/${id}`;
     window.open(url, '_blank');
+  }
+
+  goToAccount(): void {
+    this.router.navigate(['/account']);
   }
 
   toggleSidebar(): void {
@@ -58,10 +62,8 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  logout(): void {
-    // this.isCollapsed = true;
+  logOut(): void {
     this.cookieService.delete('auth-user', '/', environment.domain);
-
     localStorage.clear();
     sessionStorage.clear();
     location.href = environment.logoutUrl;

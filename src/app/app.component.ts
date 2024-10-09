@@ -2,24 +2,21 @@ import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { ShareService } from './@shared/services/share.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from './@shared/services/auth.service';
-import { CommonService } from './@shared/services/common.service';
 import { CookieService } from 'ngx-cookie-service';
-import {environment} from 'src/environments/environment'
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-
   isShowScrollTopBtn: boolean = false;
 
   constructor(
     public shareService: ShareService,
     private spinner: NgxSpinnerService,
     private authService: AuthService,
-    private commonService: CommonService,
     private cookieService: CookieService
   ) { }
 
@@ -55,18 +52,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (splashScreenLoader) {
         splashScreenLoader.style.display = 'none';
       }
-    }, 1000);
+    }, 0);
   }
   logOut(): void {
     this.cookieService.delete('auth-user', '/', environment.domain);
-    const url = environment.apiUrl + 'customers/logout';
-    this.commonService.get(url).subscribe({
-      next: (res) => {
-        localStorage.clear();
-        sessionStorage.clear();
-        location.href = environment.logoutUrl;
-      },
-    });
+    localStorage.clear();
+    sessionStorage.clear();
+    location.href = environment.logoutUrl;
   }
-
 }

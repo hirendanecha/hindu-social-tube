@@ -1,5 +1,5 @@
 <ng-container *ngIf="!isProgress">
-  <div class="modal-header">
+  <div class="modal-header justify-content-between">
     <h6 class="text-start m-0">{{ title }}</h6>
 
     <fa-icon
@@ -107,7 +107,7 @@
         <label class="form-label d-flex"
           >Video<span class="text-danger">*</span
           ><span class="d-none d-sm-block ms-2"
-            >(Max. video size allowed is 2 GB)</span
+            >(Max. video size allowed is 10 GB)</span
           ></label
         >
         <div class="d-flex" *ngIf="!selectedVideoFile">

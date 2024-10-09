@@ -36,7 +36,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   notificationId: number;
   searchText: string;
   advertisementDataList: any = [];
-
+  userData: any;
+  
   constructor(
 
     private route: ActivatedRoute,
@@ -47,8 +48,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private shareService: ShareService,
     private seoService: SeoService,
   ) {
-    this.profileId = JSON.parse(this.authService.getUserData() as any)?.profileId;
-    this.userId = JSON.parse(this.authService.getUserData() as any)?.UserID;
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.userData = data;
+    });
+    this.profileId = this.userData?.profileId;
+    this.userId = this.userData?.UserID;
     this.channelId = +localStorage.getItem('channelId');
 
     this.route.paramMap.subscribe((paramMap) => {
@@ -69,7 +73,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     });
     const data = {
-      title: `Hindu Social`,
+      title: `Hindu.social`,
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
@@ -94,7 +98,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         if (this.notificationId) {
           this.commonService.getNotification(this.notificationId).subscribe({
             next: (res) => {
-              console.log(res);
               localStorage.setItem('isRead', res.data[0]?.isRead);
             },
             error: (error) => {
@@ -102,6 +105,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
             },
           });
         }
+      }
+    });
+    this.socketService?.socket?.on('logout-check', (res) => {
+      if (res.profileId === this.profileId && res.token === this.authService.getToken()) {
+        localStorage.clear();
+        sessionStorage.clear();
+        this.shareService.updateMediaApproved(false);
       }
     });
     const isRead = localStorage.getItem('isRead');
@@ -119,7 +129,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // localStorage.setItem('channelId', this.channelData.id);
           // console.log(this.channelData);
           const data = {
-            title: `HinduSocial ${this.channelData?.firstname}`,
+            title: `Hindu.social ${this.channelData?.firstname ? this.channelData.firstname : ''}`,
             url: `${location.href}`,
             description: '',
           };
@@ -140,7 +150,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         if (res.data.length) {
           this.channelData = res.data[0];
           const data = {
-            title: `HinduSocial ${this.channelData.firstname}`,
+            title: `Hindu.social ${this.channelData?.firstname ? this.channelData.firstname : ''}`,
             url: `${location.href}`,
             description: '',
           };
@@ -225,7 +235,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         },
         error: (error) => {
           this.spinner.hide();
-          console.log(error);
+          console.log(error); 
         },
       });
   }
