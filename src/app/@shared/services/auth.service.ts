@@ -146,8 +146,19 @@ export class AuthService {
     localStorage.setItem('authUser', JSON.stringify(userDetails));
   }
 
-  getUserData() {
-    return JSON.parse(localStorage.getItem('authUser'));
+  getUserData(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.loggedInUser$.subscribe({
+        next: (data) => {
+          console.log(data);
+          resolve(data);
+        },
+        error: (err) => {
+          console.error(err);
+          reject(err);
+        },
+      });
+    });
   }
 
   getLoginUserDetails(userData: any = {}) {

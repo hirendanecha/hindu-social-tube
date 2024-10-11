@@ -1,20 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { CommonService } from 'src/app/@shared/services/common.service';
 import { AuthService } from 'src/app/@shared/services/auth.service';
-import { ShareService } from 'src/app/@shared/services/share.service';
 
 @Component({
   selector: 'app-notification',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss'],
 })
-export class NotificationsComponent {
+export class NotificationsComponent implements OnInit {
   notificationList: any[] = [];
   activePage = 1;
   hasMoreData = false;
+  userData: any;
 
   constructor(
     private commonService: CommonService,
@@ -22,15 +22,18 @@ export class NotificationsComponent {
     private router: Router,
     private toastService: ToastService,
     private authService: AuthService
-  ) {}
-
+  ) { }
+  
   ngOnInit(): void {
-    this.getNotificationList();
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.userData = data.profileId;
+      this.getNotificationList();
+    });
   }
 
   getNotificationList() {
     this.spinner.show();
-    const id = this.authService.getUserData().profileId;
+    const id = this.userData;
     const data = {
       page: this.activePage,
       size: 30,
@@ -60,18 +63,26 @@ export class NotificationsComponent {
         this.toastService.success(
           res.message || 'Notification delete successfully'
         );
-        this.getNotificationList();
+        this.notificationList = this.notificationList.filter(
+          (notification) => notification.id !== id
+        );
+        if (this.notificationList.length <= 6 && this.hasMoreData) {
+          this.notificationList = [];
+          this.loadMoreNotification();
+        }
       },
     });
   }
 
-  readUnreadNotification(id, isRead): void {
-    this.commonService.readUnreadNotification(id, isRead).subscribe({
-      next: (res) => {
-        this.toastService.success(res.message);
-        this.getNotificationList();
-      },
-    });
+  readUnreadNotification(notification, isRead): void {
+    this.commonService
+      .readUnreadNotification(notification.id, isRead)
+      .subscribe({
+        next: (res) => {
+          this.toastService.success(res.message);
+          notification.isRead = isRead;
+        },
+      });
   }
 
   loadMoreNotification(): void {

@@ -92,10 +92,11 @@ export class ShareService {
     const url = environment.apiUrl + `customers/profile/${id}`;
     this.commonService.get(url).subscribe({
       next: (res: any) => {
-        localStorage.setItem('authUser', JSON.stringify(res.data[0]));
+        // localStorage.setItem('authUser', JSON.stringify(res.data[0]));
         this.userDetails = res.data[0];
         const mediaApproved = res.data[0].MediaApproved === 1;
         this.updateMediaApproved(mediaApproved);
+        this.authService.getLoginUserDetails(this.userDetails);
         this.getChannelByUserId(this.userDetails?.channelId);
       },
       error: (error) => {
@@ -103,8 +104,8 @@ export class ShareService {
       },
     });
   }
-  getNotificationList() {
-    const id = this.authService.getUserData().profileId;
+  getNotificationList(id) {
+    // const id = this.authService.getUserData().profileId;
     const data = {
       page: 1,
       size: 20,
@@ -140,9 +141,10 @@ export class ShareService {
   }
 
   getCredentials(): any {
-    this._credentials =
-      this.authService.getUserData() || null;
-    const isAuthenticate = Object.keys(this._credentials || {}).length > 0;
+    // this._credentials =
+    //   this.authService.getUserData() || null;
+    const token = this.authService.getToken();
+    const isAuthenticate = token ? true : false;
     this.changeIsUserAuthenticated(isAuthenticate);
     return isAuthenticate;
   }

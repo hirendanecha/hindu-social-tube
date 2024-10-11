@@ -53,7 +53,7 @@ export class MainLayoutComponent implements OnInit {
         next: (res) => {
           this.spinner.hide();
           // console.log(res);
-          this.authService.setUserData(res);
+          // this.authService.setUserData(res);
           this.authService.getLoginUserDetails(res);
           this.shareService.updateMediaApproved(res?.MediaApproved);
         },
