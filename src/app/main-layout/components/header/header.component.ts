@@ -3,12 +3,14 @@ import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { BreakpointService } from 'src/app/@shared/services/breakpoint.service';
 import { ShareService } from 'src/app/@shared/services/share.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { CommonService } from 'src/app/@shared/services/common.service';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/@shared/services/auth.service';
 import { VideoPostModalComponent } from 'src/app/@shared/modals/video-post-modal/video-post-modal.component';
 import { NotificationsModalComponent } from '../notifications-modal/notifications-modal.component';
+import { SocketService } from 'src/app/@shared/services/socket.service';
 
 @Component({
   selector: 'app-header',
@@ -24,20 +26,28 @@ export class HeaderComponent implements OnInit {
     public shareService: ShareService,
     private breakpointService: BreakpointService,
     private offcanvasService: NgbOffcanvas,
+    private commonService: CommonService,
     private cookieService: CookieService,
     public authService: AuthService,
     private router: Router,
+    private socketService: SocketService,
     private modalService: NgbModal
   ) {
-    const isRead = localStorage.getItem('isRead');
-    if (isRead === 'N') {
-      this.shareService.isNotify = true;
+    const notificationStatus = localStorage.getItem('isRead');
+    if (notificationStatus === 'Y') {
+      this.shareService.setNotify(true);
     }
+    this.socketService?.socket?.on('isReadNotification_ack', (data) => {
+      if (data?.profileId) {
+        this.shareService.setNotify(false);
+      }
+    });
   }
 
   ngOnInit(): void {
     this.authService.loggedInUser$.subscribe((data) => {
       this.userDetails = data;
+      +localStorage.setItem('profileId', (this.userDetails.profileId) as any);
     });
   }
 
@@ -95,6 +105,6 @@ export class HeaderComponent implements OnInit {
       }
     );
     this.userMenusOverlayDialog.componentInstance.profileId =
-    this.userDetails?.profileId;
+      this.userDetails?.profileId;
   }
 }

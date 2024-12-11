@@ -4,19 +4,29 @@
   border-radius: 10px;
   padding: 10px 20px;
 }
-.search-input{
-  border-radius: 12px;
+.search-input {
+  border-radius: 2px;
+  border: 1px solid;
+  border-color: #2e3065;
 }
-.share-icon{
+.share-icon {
   font-size: 16px;
 }
-.description-box{
+.description-box {
   border-radius: 12px;
 }
-.single-video-author{
+.single-video-author {
   border-radius: 12px;
+  text-align: left;
 }
-
+.single-video-comment-tabs {
+  ul {
+    margin-bottom: 20px;
+  }
+  .nav.nav-tabs {
+    border: none;
+  }
+}
 .header-text {
   font-size: 20px;
   color: var(--text-color);
@@ -66,7 +76,7 @@
   }
 }
 
-.c-height{
+.c-height {
   height: 660px;
   background-color: #000;
   background-size: contain;
@@ -75,6 +85,15 @@
   @media (max-width: 768px) {
     height: 270px;
   }
+}
+
+.video-description{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 56px;
 }
 
 ::ng-deep {
@@ -101,7 +120,6 @@
   }
 
   .sub-text {
-
     span,
     h1,
     a,
@@ -120,14 +138,14 @@
       }
     }
   }
-  .c-description-height{ 
-  span,
-  h1{
-    color: var(--text-color) !important;
-    background-color: unset !important;
+  .c-description-height {
+    span,
+    h1 {
+      color: var(--text-color) !important;
+      background-color: unset !important;
     }
   }
-  .style-scope{
+  .style-scope {
     color: var(--text-color) !important;
     background-color: unset !important;
   }
@@ -151,6 +169,7 @@
       border-radius: 15px;
     }
   }
+
   .jw-controlbar .jw-button-image {
     background-color: white !important;
     border-radius: 7px !important;

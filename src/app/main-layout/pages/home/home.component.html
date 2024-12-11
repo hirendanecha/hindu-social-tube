@@ -12,7 +12,7 @@
           <fa-icon [icon]="['fas', 'play-circle']" class="me-2" />
           <h6>{{ channelData?.firstname }}</h6>
         </div>
-        <div class="d-flex gap-3 p-2">
+        <div class="d-flex gap-3 p-2 sharing-platform">
           <a href="https://hindu.social/home"
           class="img cursor-pointer" target="_blank">
           <img class="w-40-px h-40-px rounded-circle" src="assets/img/favicon.png" alt="">
@@ -28,10 +28,19 @@
           <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://tube.hindu.social/channel/{{channelData?.unique_link}}" target="_blank" class="img cursor-pointer">
             <img class="w-40-px h-40-px" src="assets/img/linkedin.png" alt="">
           </a>
+          <!-- <a href="https://www.instagram.com/?url=https://tube.hindu.social/channel/{{ channelData?.unique_link }}&caption={{ channelData?.caption }}" 
+            target="_blank" class="img cursor-pointer">
+            <img class="w-40-px h-40-px" src="assets/img/instagram.png" alt="">
+          </a> -->
+          <!-- <a href="https://www.youtube.com/watch?v={{ channelData?.unique_link}}" target="_blank" class="img cursor-pointer">
+            <img class="w-40-px h-40-px" src="assets/img/youtube.png" alt="">
+          </a> -->
         </div>
       </div>
       <app-video-card [videoData]="videoList" />  
-      <div
+
+      <!-- comment adds -->
+      <!-- <div
         class="align-items-center justify-content-center mb-2 row"
         *ngIf="!hasMoreData && videoList.length"
       >
@@ -88,11 +97,13 @@
         </ng-container>
       </div>
       </div>
-      </div>
+      </div> -->
+    
+    
     </ng-container>
   </div>
 </div>
-<ng-container *ngIf="!searchResults">
+<ng-container *ngIf="!searchResults && !channelName">
   <div class="video-block section-padding">
     <div class="row align-items-center">
       <div class="d-sm-flex justify-content-between align-items-center">
@@ -102,7 +113,7 @@
             <h6>Featured Videos</h6>
           </div>
         </div>
-        <div class="d-flex gap-3 p-2">
+        <div class="d-flex gap-3 p-2 sharing-platform">
           <a href="https://hindu.social/home"
           class="img cursor-pointer" target="_blank">
           <img class="w-40-px h-40-px rounded-circle" src="assets/img/favicon.png" alt="">
@@ -116,6 +127,13 @@
           <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://tube.hindu.social/channel/{{channelData?.unique_link}}" target="_blank" class="img cursor-pointer">
             <img class="w-40-px h-40-px" src="assets/img/linkedin.png" alt="">
           </a>
+          <!-- <a href="https://www.instagram.com/share?url=https://tube.hindu.social/channel/{{ channelData?.unique_link }}&caption={{ channelData?.caption }}" 
+          target="_blank" class="img cursor-pointer">
+          <img class="w-40-px h-40-px" src="assets/img/instagram.png" alt="">
+        </a> -->
+          <!-- <a href="https://www.youtube.com" target="_blank" class="img cursor-pointer">
+            <img class="w-40-px h-40-px" src="assets/img/youtube.png" alt="">
+          </a> -->
         </div>
       </div>
       <app-video-card [videoData]="recommendedVideoList" />
@@ -123,9 +141,9 @@
         class="d-flex justify-content-center mb-2"
         *ngIf="!hasRecommendedData && recommendedVideoList.length"
       >
-        <button class="btn btn-outline-primary" (click)="recommendedLoadMore()">
+        <!-- <button class="btn btn-outline-primary" (click)="recommendedLoadMore()">
           Load More
-        </button>
+        </button> -->
       </div>
     </div>
   </div>

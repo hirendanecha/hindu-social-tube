@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  Input,
   ViewChild,
   Output,
   EventEmitter,
@@ -9,6 +10,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { CommonService } from '../../services/common.service';
 import { environment } from 'src/environments/environment';
 import {
+  NgbActiveModal,
   NgbDropdown,
   NgbModal,
 } from '@ng-bootstrap/ng-bootstrap';
@@ -17,7 +19,10 @@ import { VideoPostModalComponent } from '../../modals/video-post-modal/video-pos
 import { CreateChannelComponent } from '../../modals/create-channel/create-channel-modal.component';
 import { ConferenceLinkComponent } from '../../modals/create-conference-link/conference-link-modal.component';
 import { ShareService } from '../../services/share.service';
-
+interface LinkData {
+  link: string;
+  imageUrl: string;
+}
 @Component({
   selector: 'app-lf-dashboard',
   templateUrl: './lf-dashboard.component.html',
@@ -40,7 +45,7 @@ export class LfDashboardComponent implements OnInit {
   channelList: any = [];
   mediaApproved: boolean;
   userId: number;
-  advertisementDataList: any = [];
+  advertisementDataList: LinkData[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -52,6 +57,9 @@ export class LfDashboardComponent implements OnInit {
   ) {
     this.authService.loggedInUser$.subscribe((data) => {
       this.useDetails = data;
+      if (this.useDetails?.channelId) {
+        this.channelId = this.useDetails.channelId
+      }
     });
     this.route.paramMap.subscribe((paramMap) => {
       // https://facetime.opash.in/
@@ -127,6 +135,7 @@ export class LfDashboardComponent implements OnInit {
   isUserMediaApproved(): boolean {
     return this.useDetails.MediaApproved === 1;
   }
+
   openVideoUploadPopUp(): void {
     const openModal = () => {
       const modalRef = this.modalService.open(VideoPostModalComponent, {
@@ -150,7 +159,7 @@ export class LfDashboardComponent implements OnInit {
       this.commonService.get(apiUrl).subscribe((res) => {
         this.channelList = res.data;
         openModal();
-      })
+      });
     } else {
       openModal();
     }

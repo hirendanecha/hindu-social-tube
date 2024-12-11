@@ -1,6 +1,7 @@
 .video-container {
   min-height: 378px;
 }
+
 .video-card-image {
   height: 220px;
 }
@@ -14,6 +15,13 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
+
+.sharing-platform a img{
+  border: 1px solid var(--text-color);
+  border-radius: 50%;
+  padding: 1px;
+}
+
 ::ng-deep {
   .c-description-height {
     // height: 45px;
@@ -25,6 +33,7 @@
     -webkit-box-orient: vertical;
     font-size: 15px;
     max-height: 47px;
+    height: 50px;
 
     a {
 
@@ -45,6 +54,7 @@
     }
   }
   .time {
+    // width: 100%;
     justify-content: flex-end;
     bottom: 5px;
     right: 5px;
@@ -64,6 +74,7 @@
 .video-view {
   font-size: 14px;
 }
+
 
 .advertise-image {
   border: 1px solid var(--font-icon-color);

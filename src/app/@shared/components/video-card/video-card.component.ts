@@ -31,9 +31,9 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     public modalService: NgbModal,
-    public authService: AuthService,
     public commonService: CommonService,
     private ngZone: NgZone,
+    public authService: AuthService
   ) {
     this.authService.loggedInUser$.subscribe((data) => {
       this.profileid = data?.profileId;
@@ -101,12 +101,14 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
     //   state: { data: video },
     // });
     const url = `video/${video.id}`;
-    window.open(url, '_blank');
+    window.location.href = url;
+    // window.open(url, '_blank');
   }
 
   playVideoByID(id: number) {
     this.postId = this.isPlay ? null : id;
     this.isPlay = !this.isPlay;
+    // console.log('isPlay', this.isPlay);
     // console.log('postId', this.postId);
   }
 
@@ -117,12 +119,14 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
   }
   
   redirectToPlayer(id){
-    window.open(`/video/${id}`, '_blank');
+    // window.open(`/video/${id}`, '_blank');
+    const url = `/video/${id}`
+    window.location.href = url;
   }
 
-  videoEdit(video: any): void {
-    // console.log(video);
-
+  videoEdit(video: any, event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
     const modalRef = this.modalService.open(VideoPostModalComponent, {
       centered: true,
       size: 'lg',
@@ -138,6 +142,7 @@ export class VideoCardComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
   getadvertizements(): void {
     this.commonService.getAdvertisement().subscribe({
       next: (res: any) => {

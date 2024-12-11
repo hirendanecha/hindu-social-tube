@@ -9,9 +9,16 @@
   <li class="nav-item" routerLinkActive="active">
     <a class="nav-link" routerLink="/home">
       <fa-icon [icon]="['fas', 'home']" [fixedWidth]="true" />
-      <span>Home</span>
+      <span>Featured Videos</span>
     </a>
   </li>
+  <li class="nav-item cursor" routerLinkActive="active">
+    <a class="nav-link" (click)="openApplicationForm()">
+      <fa-icon [icon]="['fas', 'note-sticky']" [fixedWidth]="true" />
+      <span>Channel Application</span>
+    </a>
+  </li>
+
   <li class="nav-item" routerLinkActive="active" *ngIf="isUserMediaApproved()">
     <a class="nav-link" routerLink="/channels">
       <fa-icon [icon]="['fas', 'user']" [fixedWidth]="true" />
@@ -46,14 +53,14 @@
               class="img-fluid"
               [src]="channel.profile_pic_name"
               alt=""
-              onerror="this.onerror=null;this.src='assets/default-profile.jpg';"
+              onerror="this.onerror=null;this.src='/assets/default-profile.jpg';"
             />
             {{ channel.firstname }}
           </a>
         </div>
         <!-- <div (click)="navigateToChannel(channel)">
             <img class="img-fluid" [src]="channel.profile_pic_name" alt=""
-            onerror="this.onerror=null;this.src='assets/default-profile.jpg';"
+          onerror="this.onerror=null;this.src='assets/default-profile.jpg';"
             >
             {{ channel.firstname }}
           </div> -->

@@ -13,7 +13,7 @@ export class AdminLoginGuard implements CanActivate {
 
     canActivate() {
         const auth = this.authService.adminData();        
-        const isLogin = auth['auth-token'] && auth['_id'];
+        const isLogin = auth['token'] && auth['_id'];
         
         if (isLogin) {
             this.router.navigate(['/admin']);

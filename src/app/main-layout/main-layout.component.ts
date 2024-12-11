@@ -28,7 +28,9 @@ export class MainLayoutComponent implements OnInit {
     if (newParams['authToken']) {
       const token = newParams['authToken'];
       this.authService.setToken(token);
-      localStorage.setItem('channelId', newParams['channelId']);
+      if (newParams['channelId']) {
+        localStorage.setItem('channelId', newParams['channelId']);
+      }
       setTimeout(() => {
         delete newParams['authToken'];
         const navigationExtras: NavigationExtras = {

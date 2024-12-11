@@ -16,10 +16,10 @@ export class MyAccountComponent {
   channelDetails: any = {};
   apiUrl = environment.apiUrl + 'channels';
   channelData: any = [];
+  channelList: any = [];
   activePage = 0;
   channelId: number;
-  channelList: any = [];
-  countChannel:number;
+  countChannel: number;
   hasMoreData = false;
   postedVideoCount: number;
   userChannelCount: number;
@@ -30,15 +30,19 @@ export class MyAccountComponent {
     public shareService: ShareService
   ) {
     this.channelId = +localStorage.getItem('channelId');
-    this.authService.loggedInUser$.subscribe((data) => {
-      this.userData = data;
-    });
+    if (this.userData?.channelId && !this.channelId) {
+      localStorage.setItem('channelId', this.userData?.channelId);
+    }
   }
 
   ngOnInit(): void {
-    this.getChannels();
+    // console.log("h",this.channelData);
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.userData = data;
+      this.getChannels();
+    });
     this.getPostVideosById();
-    this.getChannelByUserId()
+    this.getChannelByUserId();
   }
 
   getPostVideosById(): void {
@@ -110,7 +114,7 @@ export class MyAccountComponent {
       });
   }
   getChannels(): void {
-    const userId = this.userData?.UserID;
+    const userId = this.userData?.UserID;    
     const apiUrl = `${environment.apiUrl}channels/get-channels/${userId}`;
     this.commonService.get(apiUrl).subscribe({
       next: (res) => {
@@ -118,7 +122,9 @@ export class MyAccountComponent {
           this.channelList = res.data;
           this.countChannel = this.channelList.length;
           let channelIds = this.channelList.map((e) => e.id);
-          localStorage.setItem('get-channels', JSON.stringify(channelIds));
+          if (channelIds.length > 0) {
+            localStorage.setItem('get-channels', JSON.stringify(channelIds));
+          }
         }
       },
       error(err) {

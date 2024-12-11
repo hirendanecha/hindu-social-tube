@@ -2,8 +2,10 @@ import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { ShareService } from './@shared/services/share.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from './@shared/services/auth.service';
+import { CommonService } from './@shared/services/common.service';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     public shareService: ShareService,
     private spinner: NgxSpinnerService,
     private authService: AuthService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private route: ActivatedRoute
   ) { }
 
   @HostListener('window:scroll', [])
@@ -42,7 +45,19 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.logOut();
         },
       });
+    } else {
+      const authTokenFromCookie = this.getCookie('authToken');
+      if (authTokenFromCookie) {
+      this.authService.setToken(authTokenFromCookie);
+      } else {
+        console.log('Auth Token cookie not found.');
+      }
     }
+  }
+
+  getCookie(name: string): string | null {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
   }
 
   ngAfterViewInit(): void {
@@ -54,8 +69,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     }, 0);
   }
+
   logOut(): void {
     this.cookieService.delete('auth-user', '/', environment.domain);
+    this.cookieService.deleteAll();
     localStorage.clear();
     sessionStorage.clear();
     location.href = environment.logoutUrl;

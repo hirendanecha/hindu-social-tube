@@ -3,12 +3,77 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxTrimDirectiveModule } from 'ngx-trim-directive';
 import { BtnLoaderDirective } from './directives/btn-loader.directive';
-import { NgbActiveOffcanvas, NgbDropdownModule, NgbModal, NgbModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbActiveOffcanvas,
+  NgbDropdownModule,
+  NgbModal,
+  NgbModule,
+  NgbToastModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from './modals/confirmation-modal/confirmation-modal.component';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faAngleDoubleUp, faXmark, faBars, faChevronDown, faChevronUp, faChevronRight, faUser, faUsers, faBell, faHouse, faGear, faSun, faMoon, faPlus, faVideo, faCloudUpload, faHistory, faCalendar, faPlayCircle, faUpload, faPlusSquare, faSearch, faPlusCircle, faUserCircle, faCog, faCheckCircle, faSignOutAlt, faEye, faClock, faFileUpload, faAngleRight, faCloudUploadAlt, faListAlt, faThumbsDown, faThumbsUp, faMessage, faImage, faPaperPlane, faUserXmark, faArrowRight, faEllipsis, faPlay, faBookOpen, faPenToSquare, faTrash, faTrashCan, faRotateRight, faShareAlt, faCaretDown, faFolderOpen, faCopy, faSquareCheck, faSquareXmark, faRefresh } from '@fortawesome/free-solid-svg-icons';
+import {
+  FontAwesomeModule,
+  FaIconLibrary,
+} from '@fortawesome/angular-fontawesome';
+import {
+  faAngleDoubleUp,
+  faXmark,
+  faBars,
+  faChevronDown,
+  faChevronUp,
+  faChevronRight,
+  faUser,
+  faUsers,
+  faBell,
+  faHouse,
+  faGear,
+  faSun,
+  faMoon,
+  faPlus,
+  faVideo,
+  faCloudUpload,
+  faHistory,
+  faCalendar,
+  faPlayCircle,
+  faUpload,
+  faPlusSquare,
+  faSearch,
+  faPlusCircle,
+  faUserCircle,
+  faCog,
+  faCheckCircle,
+  faSignOutAlt,
+  faEye,
+  faClock,
+  faFileUpload,
+  faAngleRight,
+  faCloudUploadAlt,
+  faListAlt,
+  faThumbsDown,
+  faThumbsUp,
+  faMessage,
+  faImage,
+  faPaperPlane,
+  faUserXmark,
+  faArrowRight,
+  faEllipsis,
+  faPlay,
+  faBookOpen,
+  faPenToSquare,
+  faTrash,
+  faTrashCan,
+  faRotateRight,
+  faShareAlt,
+  faCaretDown,
+  faFolderOpen,
+  faCopy,
+  faSquareCheck,
+  faSquareXmark,
+  faRefresh,
+  faNoteSticky,
+} from '@fortawesome/free-solid-svg-icons';
 import { HttpClientModule } from '@angular/common/http';
-import { VideoCardComponent } from './components/video-card/video-card.component'
+import { VideoCardComponent } from './components/video-card/video-card.component';
 import { LfDashboardComponent } from './components/lf-dashboard/lf-dashboard.component';
 import { ChannelsCardComponent } from './components/channels-card/channels-card.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -25,8 +90,10 @@ import { ConferenceLinkComponent } from './modals/create-conference-link/confere
 import { CopyClipboardDirective } from './directives/copy-clipboard.directive';
 import { PostMetaDataCardComponent } from './components/post-meta-data-card/post-meta-data-card.component';
 import { MentionModule } from 'angular-mentions';
-import { RePostCardComponent } from './modals/re-post-card/re-post-card.component';
 import { SharePostModalComponent } from './modals/share-post-modal/share-post-modal.component';
+import { RePostCardComponent } from './modals/re-post-card/re-post-card.component';
+import { ImgPreviewComponent } from './components/img-preview/img-preview.component';
+import { ChannelApplicationModalComponent } from './modals/channel-application-modal/channel-application-modal.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -43,8 +110,10 @@ const sharedComponents = [
   ConferenceLinkComponent,
   CopyClipboardDirective,
   PostMetaDataCardComponent,
+  SharePostModalComponent,
   RePostCardComponent,
-  SharePostModalComponent
+  ImgPreviewComponent,
+  ChannelApplicationModalComponent,
 ];
 
 const sharedModules = [
@@ -61,7 +130,7 @@ const sharedModules = [
   NgbModule,
   PipeModule,
   NgbModule,
-  MentionModule
+  MentionModule,
 ];
 
 @NgModule({
@@ -129,7 +198,8 @@ export class SharedModule {
       faCopy,
       faSquareCheck,
       faSquareXmark,
-      faRefresh
+      faRefresh,
+      faNoteSticky
     );
   }
 }
